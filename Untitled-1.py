@@ -13,9 +13,9 @@ pygame.init()
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Zombie')
 clock = pygame.time.Clock()
+zombieList = []
 
-
-
+zombieCount = 1
 health = 100
 #Define some colors
 black = (0,0,0)
@@ -49,7 +49,7 @@ def addZombie():
             zombies = []
             zombies.append(zombx)
             zombies.append(zombu)
-
+            
             zombieList.append(zombies)
 
 def player(x,y):
@@ -68,10 +68,12 @@ def game_loop(): #game loop
     x = (display_width * 0.45)
     y = (display_height * 0.45)
     #zombie variables
-    zombieList = []
-    zombieCount = 1
     zombie_startx = 0
     zombie_starty = 0
+    zombieLead = []
+    zombieLead.append(zombie_startx)
+    zombieLead.append(zombie_starty)
+    zombieList.append(zombieLead)
     zombie_speed = 3
     health = 100
     health_change = 0
@@ -119,16 +121,16 @@ def game_loop(): #game loop
         health =+ health_change
         gameDisplay.fill(white)
         
-        zombieLead = []
-        zombieLead.append(zombie_startx)
-        zombieLead.append(zombie_starty)
-        zombieList.append(zombieLead)
+        
 
         zombie(zombieList) 
+        if len(zombieList) > zombieCount:
+            del zombieList[0]
+            print(zombieList)
 
 
 
-        goto = calcMove(zombie_speed,zombie_startx,zombie_starty,x,y)
+        goto = calcMove(zombie_speed,zombieList[0][0],zombieList[0][1],x,y)
         zombie_startx = goto[0]
         zombie_starty = goto[1]
 
