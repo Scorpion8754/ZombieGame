@@ -70,10 +70,8 @@ def game_loop(): #game loop
     #zombie variables
     zombie_startx = 0
     zombie_starty = 0
-    zombieLead = []
-    zombieLead.append(zombie_startx)
-    zombieLead.append(zombie_starty)
-    zombieList.append(zombieLead)
+
+    
     zombie_speed = 3
     health = 100
     health_change = 0
@@ -122,7 +120,10 @@ def game_loop(): #game loop
         gameDisplay.fill(white)
         
         
-
+        zombieLead = []
+        zombieLead.append(zombie_startx)
+        zombieLead.append(zombie_starty)
+        zombieList.append(zombieLead)
         zombie(zombieList) 
         if len(zombieList) > zombieCount:
             del zombieList[0]
