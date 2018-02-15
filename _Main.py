@@ -1,16 +1,12 @@
 import pygame
 import random
 import math
-
-
 pygame.init()
 gameWidth = 1280
 gameHeight = 720
 gameWindow = pygame.display.set_mode((gameWidth, gameHeight))
 pygame.display.set_caption("ZOMBIE GAME")
 clock = pygame.time.Clock()
-
-
 
 #Define some colors
 black = (0, 0, 0)
@@ -34,10 +30,7 @@ def calcMove(speed, fromx, fromy, tox, toy):  # I'm going this fast, want to get
     fromy += int(unity * speed)
     return (fromx, fromy)
 
-
-
-
-class Zombie(pygame.sprite.Sprite):
+class Zombie(pygame.sprite.Sprite): #Basic zombie
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((15, 15))
@@ -52,7 +45,7 @@ class Zombie(pygame.sprite.Sprite):
     def move(self):
         xdiff = self.rect.x - player.rect.x
         ydiff = self.rect.y - player.rect.y
-        if(xdiff < -8) or (xdiff > 8):
+        if(xdiff < -8) or (xdiff > 8) or (ydiff < -8) or (ydiff > 8):
             mvmt = calcMove(self.speed, self.rect.x, self.rect.y, player.rect.x, player.rect.y)
             if self.cd < 0:
                 self.rect.x = mvmt[0]
@@ -75,8 +68,9 @@ class bigZombie(Zombie):
         print("You got bitch slapped!")
         self.cd = self.cdMax
 
-class playerActive():
+class playerActive(pygame.sprite.Sprite):
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((15, 15))
         self.image.fill(blue)
         self.rect = self.image.get_rect()
@@ -111,17 +105,18 @@ for i in range(2):
     all_sprites.add(z)
     mobs.add(z)
 zombies.append(bigZombie())
+all_sprites = pygame.sprite.Group()
 
 
 #Game Start
 gameActive = True
 fps = 60
-while gameActive:
+while gameActive: #Game loop
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
             gameActive = False
-
+    #Get Key presses
     activeKey = pygame.key.get_pressed()
     if activeKey[pygame.K_d]:
         player.move(1, 0)
@@ -133,7 +128,6 @@ while gameActive:
         player.move(0, 1)
     if activeKey[pygame.K_0]:
         zombies.append(Zombie())
-
     mouse = pygame.mouse.get_pressed()
     if mouse[0]:
         #player.shoot()
@@ -145,7 +139,6 @@ while gameActive:
     #Run updates to handle cooldowns etc.
     player.update()
     all_sprites.update()
-
     gameWindow.fill(white)
     #Draw stuff here
     gameWindow.blit(player.image, player.rect)
@@ -158,8 +151,5 @@ while gameActive:
     pygame.display.update()
     clock.tick(fps)
 
-
 pygame.quit
 quit()
-
-
