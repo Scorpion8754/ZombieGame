@@ -71,10 +71,16 @@ while gameActive: #Game loop
     #Draw stuff here
     gameWindow.blit(player.image, player.rect)
     all_sprites.draw(gameWindow)
-    for i in range(len(zombies)):
-        gameWindow.blit(zombies[i].image, zombies[i].rect)
-        zombies[i].move(player)
-        zombies[i].update()
+    for i in zombies:
+        gameWindow.blit(i.image, i.rect)
+        zomboz = list(zombies)
+        zomboz.remove(i)
+        collide = pygame.sprite.spritecollide(i, zomboz, False)
+        if not collide:
+            i.move(player)
+        if(len(collide) > 1):
+            collide[0].move(player)
+        i.update()
     #End Drawing Stuff
     pygame.display.update()
     clock.tick(fps)
