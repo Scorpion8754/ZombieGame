@@ -1,5 +1,6 @@
 import pygame
 import sys
+from os import path
 from settings import *
 from sprites import *
 
@@ -13,7 +14,11 @@ class Game:
         self.load_data()
 
     def load_data(self):
-        pass
+        game_folder = path.dirname(__file__)
+        self.map_data = []
+        with open(path.join(game_folder, 'map.txt'), 'rt') as f:
+            for line in f:
+                self.map_data.append(line)
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -21,12 +26,12 @@ class Game:
         self.walls = pg.sprite.Group()
         self.enemies = pg.sprite.Group()
         self.player = Player(self, 10, 10)
-        for x in range(10, 20):
-            Wall(self, x, 5)
-            pass
-        self.enemies.add(Zombie(self, 10, 10))
-
-
+        for row, tiles in enumerate(self.map_data):
+            for col, tile in enumerate(tiles):
+                if tile == '1':
+                    Wall(self, col, row)
+                if tile == 'Z':
+                    self.enemies.add(Zombie(self, (col * TILESIZE), (row * TILESIZE)))
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
@@ -35,19 +40,6 @@ class Game:
             self.events()
             self.update()
             self.draw()
-            activeKey = pygame.key.get_pressed()
-            if activeKey[pygame.K_ESCAPE]:
-                self.quit()
-            if activeKey[pygame.K_a]:
-                self.player.move(-1, 0)
-            if activeKey[pygame.K_d]:
-                self.player.move(1, 0)
-            if activeKey[pygame.K_w]:
-                self.player.move(0, -1)
-            if activeKey[pygame.K_s]:
-                self.player.move(0, 1)
-            if activeKey[pygame.K_0]:
-                self.enemies.add(Zombie(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT)))
     def quit(self):
         pg.quit()
         sys.exit()
