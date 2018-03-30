@@ -29,3 +29,7 @@ def calcMove(speed, fromx, fromy, tox, toy):  # I'm going this fast, want to get
     vx = int(unitx * speed)
     vy = int(unity * speed)
     return (vx, vy)
+
+#Player Settings
+PLAYER_ROT_SPEED = 250
+PLAYER_IMG = 'player_gun.png'
