@@ -1,9 +1,11 @@
-import pygame
+import pygame as pg
 import sys
 from os import path
 from settings import *
 from sprites import *
 from tilemap import *
+
+
 
 class Game:
     def __init__(self):
@@ -34,6 +36,7 @@ class Game:
                 if tile == 'P':
                     self.player = Player(self, col, row)
         self.camera = Camera(self.map.width, self.map.height)
+        self.mouse_dir = vec(self.camera.mouseAdjustment(pg.mouse.get_pos())) - vec(self.player.pos)
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -52,6 +55,7 @@ class Game:
         # update portion of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
+        self.mouse_dir = vec(self.camera.mouseAdjustment(pg.mouse.get_pos())) - vec(self.player.pos)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -71,7 +75,11 @@ class Game:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
-
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if event.button == 4:
+                    self.camera.AdjustZoom(100)
+                if  event.button == 5:
+                    self.camera.AdjustZoom(-100)
     def show_start_screen(self):
         pass
 
@@ -80,7 +88,6 @@ class Game:
 
 # create the game object
 g = Game()
-g.show_start_screen()
 while True:
     g.new()
     g.run()

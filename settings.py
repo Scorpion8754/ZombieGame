@@ -1,4 +1,6 @@
 import math
+import pygame as pg
+
 # define some colors (R, G, B)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -14,7 +16,6 @@ HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 60
 TITLE = "Zombie Game"
 BGCOLOR = DARKGREY
-
 TILESIZE = 32
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
@@ -33,3 +34,4 @@ def calcMove(speed, fromx, fromy, tox, toy):  # I'm going this fast, want to get
 #Player Settings
 PLAYER_ROT_SPEED = 250
 PLAYER_IMG = 'player_gun.png'
+PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
