@@ -21,12 +21,20 @@ class Game:
         img_folder = path.join(game_folder, 'assets')
         self.map = Map(path.join(game_folder, 'map.txt'))
         self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        self.player_img = pg.transform.scale(self.player_img, (round(TILESIZE), round(TILESIZE)))
+        self.bullet_img = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
+        self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
+        self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
+        self.zombie_img = pg.image.load(path.join(img_folder, MOB_IMG)).convert_alpha()
+        self.zombie_img = pg.transform.scale(self.zombie_img, (TILESIZE, TILESIZE))
+
 
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.enemies = pg.sprite.Group()
+        self.bullets = pg.sprite.Group()
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles):
                 if tile == '1':
@@ -64,8 +72,8 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
+        pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         self.screen.fill(BGCOLOR)
-        self.draw_grid()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
@@ -76,8 +84,13 @@ class Game:
             if event.type == pg.QUIT:
                 self.quit()
             if event.type == pg.MOUSEBUTTONDOWN:
-                if event.button == 4:
-                    self.camera.AdjustZoom(100)
+                if event.button == 1:
+                    now = pg.time.get_ticks()
+                    if now - self.player.last_shot > BULLET_RATE:
+                        self.player.last_shot = now
+                        dir = vec(1, 0).rotate(-self.player.rot)
+                        pos = self.player.pos + BARREL_OFFSET.rotate(-self.player.rot)
+                        Bullet(self, pos, dir)
                 if  event.button == 5:
                     self.camera.AdjustZoom(-100)
     def show_start_screen(self):
